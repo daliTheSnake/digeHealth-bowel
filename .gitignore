@@ -6,7 +6,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .ipynb_checkpoints/
-docs/
 # data and run artifacts live outside the repo
 *.wav
 *.pt
