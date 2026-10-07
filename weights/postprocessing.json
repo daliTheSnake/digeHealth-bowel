@@ -1,0 +1,6 @@
+{
+  "threshold": 0.5,
+  "max_gap": 0.02,
+  "min_duration": 0.06,
+  "split_dip": 0.3
+}
