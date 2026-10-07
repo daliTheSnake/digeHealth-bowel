@@ -4,18 +4,19 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.config import CONFIG
 from src.event import KNOWN_LABELS, Event
 
 # Column order of the multi-hot labels, sorted since a set has no stable order.
 # A window with no active label is background: an all-zero row.
 LABELS = sorted(KNOWN_LABELS)
 
-WINDOW_SIZE = 1.0
-HOP = 0.5
+WINDOW_SIZE = CONFIG.windows.size
+HOP = CONFIG.windows.hop
 # An event labels a window when it overlaps it by at least the smaller of
 # these two: a short event must be half inside, a long one only needs a touch.
-MIN_OVERLAP_RATIO = 0.5
-MIN_OVERLAP_SECONDS = 0.25
+MIN_OVERLAP_RATIO = CONFIG.windows.min_overlap_ratio
+MIN_OVERLAP_SECONDS = CONFIG.windows.min_overlap_seconds
 # Float tolerance, so an overlap of exactly the threshold still counts.
 EPSILON = 1e-9
 
