@@ -154,7 +154,7 @@ def plot_duration_distribution(events: list[Event], docs_dir: Path) -> None:
 
     # Durations span orders of magnitude (median ~0.2 s, a few events of
     # minutes): log-spaced bins on a log axis keep the bulk readable.
-    bins = np.logspace(np.log10(min(durations)), np.log10(max(durations)), 30)
+    bins = np.logspace(np.log10(min(durations)), np.log10(max(durations)), 30).tolist()
 
     plt.figure(figsize=(8, 5))
     plt.hist(durations, bins=bins)
