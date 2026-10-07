@@ -1,7 +1,7 @@
 [project]
 name = "digehealth-bowel"
 version = "0.1.0"
-description = "Add your description here"
+description = "Find the start, end and type (sb, mb, h) of the bowel sounds of an audio recording"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -9,15 +9,18 @@ dependencies = [
     "matplotlib>=3.11.2",
     "numpy>=2.5.3",
     "pandas>=3.0.6",
+    "pyyaml>=6.0.3",
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
     "soundfile>=0.14.0",
     "torch>=2.14.1",
-    "typer>=0.27.2",
+    "torchvision>=0.29.1",
+    "transformers>=5.18.0",
 ]
 
 [dependency-groups]
 dev = [
+    "mypy>=2.4.0",
     "pre-commit>=4.6.2",
 ]
 
@@ -27,3 +30,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+files = ["main.py", "src", "scripts"]
