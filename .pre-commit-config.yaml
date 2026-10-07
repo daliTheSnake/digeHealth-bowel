@@ -16,3 +16,14 @@ repos:
       - id: ruff-check
         args: ["--fix"]
       - id: ruff-format
+
+  # Local: it needs torch and the other dependencies, which only the project
+  # environment has.
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        pass_filenames: false
