@@ -1,0 +1,69 @@
+# Global parameters of the project. Every key is optional: what is left out keeps
+# the value written here, and a key that does not exist is an error.
+# Read when the program starts, so edit this file before running main.py.
+# Another file can be used with: BOWEL_CONFIG=other.yaml uv run python main.py ...
+# Weights are only valid for the windows, mel and models values they were trained with.
+
+audio:
+  sample_rate: 16000          # every window is brought to this rate, in Hz
+
+windows:
+  size: 1.0                   # window length, in seconds
+  hop: 0.5                    # step between two windows, in seconds
+  min_overlap_ratio: 0.5      # an event labels a window when it overlaps it by at least
+  min_overlap_seconds: 0.25   #   the smaller of: this share of the event, or this many seconds
+
+split:
+  block_size: 60.0            # seconds per block of a recording
+  # Role of each block, repeating: 7 train, 2 val, 1 test is 70 / 20 / 10 %.
+  cycle: [train, train, val, train, test, train, train, val, train, train]
+  margin: 1.0                 # train windows closer than this to a val or test block are dropped
+
+segments:                     # second stage: 1 s segments centred on a sound
+  reject_clearance: 0.25      # a reject spot has no sb, mb or h this close to its centre, in seconds
+  seed: 0                     # seed of the random reject spots
+
+mel:                          # log-Mel front end of the detector, ResNet-50 and CNN
+  n_fft: 512
+  hop_length: 160             # 160 samples at 16 kHz = one frame every 10 ms
+  n_mels: 64
+  epsilon: 1.0e-6             # floor added before the log
+
+training:
+  epochs: 15                  # per `train` run; --epochs N overrides it, with --resume it is N more
+  batch_size: 32
+  learning_rate: 1.0e-3       # when a model has no entry in models.learning_rates
+  threshold: 0.5              # a label or a frame is positive from this probability
+  max_pos_weight: 10.0        # cap on the weight of a rare label's positives in the loss
+  seed: null                  # an integer to repeat a run (about, GPU calls may differ), null for none
+
+models:
+  learning_rates:
+    hubert: 2.0e-5
+    resnet50: 1.0e-4
+    cnn: 1.0e-3
+    detector: 1.0e-3
+  hubert:
+    pretrained: facebook/hubert-base-ls960
+    freeze_encoder: true      # keep the convolutional feature encoder fixed
+  resnet50:
+    pretrained: true          # start from the ImageNet weights
+  cnn:
+    channels: [32, 64, 128]
+    dropout: 0.5
+  detector:
+    channels: [32, 64, 128]
+    gru_hidden: 64
+
+pipeline:
+  classifier: resnet50        # segment classifier of `predict` and `pipeline` when --model is not given
+  # The post-processing is chosen on the validation set among these values.
+  thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]
+  max_gaps: [0.0, 0.02, 0.04, 0.06, 0.1]
+  min_durations: [0.02, 0.04, 0.06]
+  split_dips: [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
+  tuning_iou: 0.5             # the IoU at which the choice is made
+  report_ious: [0.3, 0.5]     # the IoUs reported
+
+paths:
+  weights_dir: weights
